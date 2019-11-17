@@ -17,7 +17,6 @@ video_capture = cv2.VideoCapture(0)
 emotion_dict= {0:angry, 5:sad, 'Neutral': 4, 1: disgust, 6:surprise, 2:fear, 'Happy': 3}
 model = load_model("C:\\Users\\dupst\\Documents\\oxford\\oxfordhack2k19\\model_v6_23.hdf5")
 while True:
-    #Capture frame-by-frame
     ret, frame = video_capture.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(
@@ -28,7 +27,6 @@ while True:
         flags=cv2.CASCADE_SCALE_IMAGE
     )
     for (x, y, w, h) in faces:
-        #cv2.rectangle(frame, (x, y), (x + w - 15, y + h - 15), (0, 255, 0), 2)
         face_image = cv2.resize(frame, (48, 48))
         face_image = cv2.cvtColor(face_image, cv2.COLOR_BGR2GRAY)
         face_image = np.reshape(face_image, [1, face_image.shape[0], face_image.shape[1], 1])
@@ -38,17 +36,15 @@ while True:
             try:
 
                 emoji = cv2.resize(emotion_dict[predicted_class],(w-10,h-10))
-                #frame[y:y+h-10,x:x+w-10] = emoji
 
                 cv2.circle(frame,(x+int(w/2),y+int(h/2)),int((h -10)/2),(0,0,0),-1)
-                #emoji = cv2.resize(emotion_dict[predicted_class],(frame.shape[0],frame.shape[1]))
+
                 for i in range(h - 10):
                     for j in range(w-10):
                         if frame[y+i,x+j].all() == 0:
                             frame[y+i,x+j] = emoji[i,j]
 
-                #emoji = cv2.resize(emotion_dict[predicted_class],(w-10,h-10))
-                #frame[y:y+h-10,x:x+w-10] = emoji
+
             except Exception as e:
                 print(e)
                 continue
